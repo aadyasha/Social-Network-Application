@@ -79,26 +79,19 @@ class Post {
         return comments;
     }
     
-    // --- Other methods ---
-    /**
-     * Adds a new comment to this post's list of comments.
-     */
+    
     public void addComment(Comment comment) {
         this.comments.add(comment);
     }
 
     /**
-     * --- NEW FEATURE: LIKES ---
-     * Increments the like counter for this post.
+     * ---  LIKES ---
      */
     public void addLike() {
         this.likes++;
     }
 
-    /**
-     * Creates a nice, multi-line string to display the post and its comments.
-     * --- UPDATED --- to show the Post ID and Like count.
-     */
+    
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -128,24 +121,21 @@ class Post {
     }
 }
 
-/**
- * Represents a user in the social network.
- * Each user has a username, profile info, a list of friends, and a list of posts they've made.
- */
+
 class User {
     private final String username;
     private String profileInfo;
-    private final List<User> friends; // A list of other User objects.
-    private final List<Post> posts; // A list of Post objects this user has created.
+    private final List<User> friends; 
+    private final List<Post> posts; 
 
     public User(String username) {
         this.username = username;
         this.profileInfo = "No profile information set.";
-        this.friends = new ArrayList<>(); // Start with an empty friends list.
-        this.posts = new ArrayList<>(); // Start with an empty list of posts.
+        this.friends = new ArrayList<>(); 
+        this.posts = new ArrayList<>(); 
     }
 
-    // --- Getter methods ---
+
     public String getUsername() {
         return username;
     }
@@ -158,7 +148,7 @@ class User {
         return posts;
     }
     
-    // --- Setter and other methods ---
+    
     public void setProfileInfo(String profileInfo) {
         this.profileInfo = profileInfo;
     }
@@ -174,9 +164,7 @@ class User {
         posts.add(post);
     }
     
-    /**
-     * Builds a string that represents the user's profile page.
-     */
+    
     public String getProfileView() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("========================================\n");
@@ -196,7 +184,7 @@ class User {
         if (posts.isEmpty()) {
             stringBuilder.append("No posts yet.\n");
         } else {
-            // Loop backwards to show the newest posts first.
+            
             for (int i = posts.size() - 1; i >= 0; i--) {
                 stringBuilder.append(posts.get(i).toString()).append("\n");
             }
@@ -205,11 +193,7 @@ class User {
         return stringBuilder.toString();
     }
     
-    /**
-     * The equals() and hashCode() methods are important for checking if two User objects are the "same".
-     * Here, we decide that two Users are the same if they have the same username.
-     * This is crucial for methods like `friends.contains()`.
-     */
+   
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -225,17 +209,11 @@ class User {
 }
 
 
-// --- SERVICE CLASS (The "Engine" of the Social Network) ---
-/**
- * This class acts as the central manager for our social network.
- * It holds all the data (users, posts) and contains the logic for interactions.
- * In a real-world application, this logic would run on a backend server.
- */
+
 class SocialNetwork {
-    // We use Maps to store our data. A Map lets us look up data with a "key".
-    // Here, we use the username (a String) to quickly find a User object.
+    
     private final Map<String, User> users;
-    // We also store all posts in a map, using the post's unique ID as the key.
+    
     private final Map<String, Post> posts;
 
     public SocialNetwork() {
@@ -244,32 +222,32 @@ class SocialNetwork {
     }
 
     public User createUser(String username) {
-        // Check if the username is already taken.
+        
         if (users.containsKey(username)) {
             System.out.println("!> Error: Username '" + username + "' already exists.");
-            return null; // Return nothing to indicate failure.
+            return null; 
         }
         User newUser = new User(username);
-        users.put(username, newUser); // Add the new user to our map.
+        users.put(username, newUser); 
         return newUser;
     }
 
     public User getUser(String username) {
-        return users.get(username); // Look up a user by their name.
+        return users.get(username); 
     }
     
     public Post getPost(String postId) {
-        return posts.get(postId); // Look up a post by its ID.
+        return posts.get(postId); 
     }
 
     public void addFriend(String username1, String username2) {
         User user1 = getUser(username1);
         User user2 = getUser(username2);
 
-        // Make sure both users exist and they are not the same person.
+        // Making sure both users exist and are not the same person.
         if (user1 != null && user2 != null && !username1.equals(username2)) {
             user1.addFriend(user2);
-            user2.addFriend(user1); // Friendships are mutual, so add both ways.
+            user2.addFriend(user1); // Friendships are mutual
             System.out.println("*> " + username1 + " and " + username2 + " are now friends!");
         } else {
             System.out.println("!> Error: One or both users not found, or you tried to friend yourself.");
@@ -290,7 +268,7 @@ class SocialNetwork {
     }
     
     public void addComment(String postId, String authorUsername, String text) {
-        Post post = getPost(postId); // Find the post by its ID.
+        Post post = getPost(postId); 
         User author = getUser(authorUsername);
         
         if (post != null && author != null) {
@@ -301,10 +279,7 @@ class SocialNetwork {
         }
     }
     
-    /**
-     * --- NEW FEATURE: LIKES ---
-     * Finds a post by its ID and adds a like to it.
-     */
+
     public void likePost(String postId) {
         Post post = getPost(postId);
         if (post != null) {
@@ -315,63 +290,48 @@ class SocialNetwork {
         }
     }
 
-    /**
-     * Generates a "news feed" for a user.
-     * The feed contains the user's own posts plus all posts from their friends.
-     */
+    
     public List<Post> getNewsFeed(String username) {
         User user = getUser(username);
         if (user == null) {
             System.out.println("!> Error: User not found.");
-            return new ArrayList<>(); // Return an empty list.
+            return new ArrayList<>(); 
         }
 
-        List<Post> newsFeed = new ArrayList<>(user.getPosts()); // Start with the user's own posts.
-        // Go through each friend and add all of their posts to the feed.
+        List<Post> newsFeed = new ArrayList<>(user.getPosts()); 
+       
         for (User friend : user.getFriends()) {
             newsFeed.addAll(friend.getPosts());
         }
 
-        // Sort the collected posts by their ID (which is based on creation time) to show newest first.
+        
         newsFeed.sort((p1, p2) -> p2.getPostId().compareTo(p1.getPostId()));
         return newsFeed;
     }
     
     public List<String> getAllUsernames() {
-        return new ArrayList<>(users.keySet()); // Get a list of all registered usernames.
+        return new ArrayList<>(users.keySet()); 
     }
 }
 
 
-// --- MAIN APPLICATION CLASS (The User Interface) ---
-/**
- * This is the main class that runs our application.
- * It provides a command-line interface (CLI) for a human user to interact
- * with the SocialNetwork simulation.
- */
+
 public class SocialNetworkApplication {
 
-    // 'static' means these variables belong to the class itself, not to any one object.
-    // There will only be one 'network' and one 'loggedInUser' for the whole application.
+    
     private static final SocialNetwork network = new SocialNetwork();
-    private static User loggedInUser = null; // At the start, no one is logged in.
+    private static User loggedInUser = null; 
 
-    /**
-     * The `main` method is the entry point of any Java application.
-     * Execution starts here.
-     */
+    
     public static void main(String[] args) {
-        setupInitialState(); // First, create some sample data.
-        runCli(); // Then, start the user interface loop.
+        setupInitialState(); 
+        runCli(); .
     }
 
-    /**
-     * Populates the network with some dummy users, friends, and posts
-     * so the application isn't empty when it starts.
-     */
+    
     private static void setupInitialState() {
         System.out.println("Initializing Social Network Simulation...");
-        // Create users
+        // Creating users
         network.createUser("alice");
         network.createUser("bob");
         network.createUser("charlie");
@@ -381,48 +341,45 @@ public class SocialNetworkApplication {
         network.getUser("alice").setProfileInfo("Software developer and cat lover.");
         network.getUser("bob").setProfileInfo("Musician and coffee enthusiast.");
 
-        // Establish friendships
+        // Establishing friendships
         network.addFriend("alice", "bob");
         network.addFriend("alice", "charlie");
 
-        // Create posts
+        // Creating posts
         Post p1 = network.createPost("alice", "Just finished a great new feature for my project! #coding");
         Post p2 = network.createPost("bob", "My new song is out now! Check it out on SoundWave.");
         network.createPost("charlie", "Thinking about learning Java. Any tips?");
         network.createPost("alice", "My cat is being extra cute today.");
         
-        // Add comments
+        // Adding comments
         network.addComment(p1.getPostId(), "bob", "Awesome! Can't wait to see it.");
         network.addComment(p2.getPostId(), "alice", "Listening now! It's fantastic!");
         network.addComment(p2.getPostId(), "charlie", "Great track, Bob!");
         System.out.println("Initialization complete. Welcome!");
     }
 
-    /**
-     * Runs the main command-line interface loop.
-     * It will keep running until the user types 'exit'.
-     */
+    
     private static void runCli() {
-        Scanner scanner = new Scanner(System.in); // Create a tool to read user input.
+        Scanner scanner = new Scanner(System.in); 
         
-        // A "while (true)" loop runs forever until we explicitly 'break' out of it.
+        
         while (true) {
-            // The program behaves differently depending on whether a user is logged in or not.
+           
             if (loggedInUser == null) {
                 displayLoginMenu();
                 handleLogin(scanner);
             } else {
                 displayMainMenu();
-                String command = scanner.nextLine().trim(); // Read the user's choice.
+                String command = scanner.nextLine().trim(); 
                 
                 if (command.equalsIgnoreCase("logout")) {
-                    loggedInUser = null; // Log the user out.
+                    loggedInUser = null; 
                     System.out.println("You have been logged out.");
-                    continue; // Skip the rest of the loop and start from the top.
+                    continue; 
                 }
                 if (command.equalsIgnoreCase("exit")) {
                     System.out.println("Thank you for using the Social Network. Goodbye!");
-                    break; // Exit the 'while' loop, which will end the program.
+                    break; 
                 }
                 handleCommand(command, scanner);
             }
@@ -440,11 +397,11 @@ public class SocialNetworkApplication {
         String username = scanner.nextLine().trim();
         if (username.equalsIgnoreCase("exit")) {
             System.out.println("Goodbye!");
-            System.exit(0); // A forceful way to stop the entire program immediately.
+            System.exit(0);
         }
-        User user = network.getUser(username); // Try to find the user.
+        User user = network.getUser(username); 
         if (user != null) {
-            loggedInUser = user; // If found, set them as the logged-in user.
+            loggedInUser = user; 
             System.out.println("\nWelcome, " + loggedInUser.getUsername() + "!");
         } else {
             System.out.println("!> User not found. Please try again.");
@@ -465,11 +422,8 @@ public class SocialNetworkApplication {
         System.out.print("Enter your choice: ");
     }
 
-    /**
-     * Takes the user's menu choice and calls the appropriate method.
-     */
+    
     private static void handleCommand(String choice, Scanner scanner) {
-        // A 'switch' statement is a clean way to handle multiple fixed choices.
         switch (choice) {
             case "1":
                 viewNewsFeed();
@@ -533,18 +487,15 @@ public class SocialNetworkApplication {
         network.addFriend(loggedInUser.getUsername(), friendName);
     }
     
-    /**
-     * --- NEW INTERACTIVE FEATURE ---
-     * Handles the logic for liking a post.
-     */
+    
     private static void likePost(Scanner scanner) {
         System.out.println("--- Like a Post ---");
         System.out.println("Here are the recent posts from your feed:");
-        viewNewsFeed(); // Show the feed so the user can see post IDs.
+        viewNewsFeed(); 
         System.out.print("\nEnter the ID of the post you want to like: ");
         String postId = scanner.nextLine().trim();
         
-        // Check if the post is actually in the user's feed to prevent liking a random post
+        
         List<Post> feed = network.getNewsFeed(loggedInUser.getUsername());
         boolean postInFeed = feed.stream().anyMatch(p -> p.getPostId().equals(postId));
         
