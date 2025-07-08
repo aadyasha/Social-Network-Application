@@ -1,46 +1,30 @@
-// We need to import some built-in Java tools to help us.
-import java.time.LocalDateTime; // To get the current date and time.
-import java.time.format.DateTimeFormatter; // To format the date and time nicely.
-import java.util.ArrayList; // To create lists that can grow and shrink.
-import java.util.HashMap; // To store data using a key-value system, like a dictionary.
-import java.util.List; // The general type for a list of items.
-import java.util.Map; // The general type for a map (key-value store).
-import java.util.Scanner; // To read input from the user in the console.
-import java.util.UUID; // To generate unique random IDs for posts and comments.
-import java.util.stream.Collectors; // A tool to help with processing lists of data.
+import java. time.LocalDateTime; 
+import java.time.format.DateTimeFormatter; 
+import java.util.ArrayList; 
+import java.util.HashMap; 
+import java.util.List; 
+import java.util.Map; 
+import java.util.Scanner; 
+import java.util.UUID; 
+import java.util.stream.Collectors; 
 
-/*
- * Note on Classes: In Java, a "class" is a blueprint for creating objects.
- * Think of it like a cookie cutter. The class is the cutter, and the objects are the cookies.
- * We will define blueprints for Users, Posts, and Comments.
- */
 
-// --- MODEL CLASSES ---
-// These classes are the "blueprints" for the data we want to store.
-
-/**
- * Represents a single comment on a post.
- * Each comment object will have an author, text, and a timestamp.
- */
 class Comment {
-    // 'final' means this value cannot be changed after it's first set.
+    
     private final String commentId;
-    private final User author; // The User who wrote the comment.
-    private final String text; // The actual text of the comment.
-    private final LocalDateTime timestamp; // When the comment was made.
+    private final User author; 
+    private final String text; 
+    private final LocalDateTime timestamp;
 
-    /**
-     * This is the "constructor". It's a special method called when we create a new Comment object.
-     * It sets up the initial state of the object.
-     */
+    
     public Comment(User author, String text) {
-        this.commentId = UUID.randomUUID().toString(); // Assign a unique random ID.
+        this.commentId = UUID.randomUUID().toString(); 
         this.author = author;
         this.text = text;
-        this.timestamp = LocalDateTime.now(); // Record the time the comment was created.
+        this.timestamp = LocalDateTime.now();
     }
 
-    // "Getter" methods to allow other parts of the code to read the private data.
+    
     public User getAuthor() {
         return author;
     }
@@ -49,45 +33,36 @@ class Comment {
         return text;
     }
 
-    /**
-     * The toString() method provides a text representation of the object.
-     * This is useful for printing the comment details to the console.
-     * The @Override annotation means we are providing our own version of a method that Java already defines.
-     */
+    
     @Override
     public String toString() {
-        // This formats the date and time to be more readable (e.g., "2023-10-27 14:30").
+        
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return "    > " + author.getUsername() + " (" + timestamp.format(formatter) + "): " + text;
     }
 }
 
-/**
- * Represents a single post made by a user.
- * Each post has an author, content, a timestamp, and a list of comments.
- */
+
 class Post {
     private final String postId;
     private final User author;
     private final String content;
     private final LocalDateTime timestamp;
-    private final List<Comment> comments; // A post can have a list of comments.
-    // --- NEW FEATURE: LIKES ---
-    private int likes; // A counter for how many likes the post has.
+    private final List<Comment> comments; 
+    
+    private int likes;
 
-    /**
-     * Constructor for creating a new Post.
-     */
+    
     public Post(User author, String content) {
         this.postId = UUID.randomUUID().toString();
         this.author = author;
         this.content = content;
         this.timestamp = LocalDateTime.now();
-        this.comments = new ArrayList<>(); // Initialize an empty list for comments.
-        this.likes = 0; // A new post starts with 0 likes.
+        this.comments = new ArrayList<>(); 
+        this.likes = 0; 
     }
     
-    // --- Getter methods ---
+    
     public String getPostId() {
         return postId;
     }
